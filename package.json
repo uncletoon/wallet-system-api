@@ -1,0 +1,20 @@
+{
+  "name": "micro-finance",
+  "version": "1.0.0",
+  "description": "Wallet & Micro-Finance Backend system",
+  "license": "ISC",
+  "author": "Patience",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "devStart": "nodemon backend/src/server.js"
+  },
+  "dependencies": {
+    "body-parse": "^0.1.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}
