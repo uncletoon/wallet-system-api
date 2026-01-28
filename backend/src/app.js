@@ -1,8 +1,11 @@
 const express = require('express');
 const app = express();
 
-const healthRouter = require('./routers/health.routers');
-const userRouter = require('./routers/user.routers');
+app.use(express.json());
+
+const healthRouter = require('./routes/health.routes');
+const userRouter = require('./routes/user.routes');
+const accRoutes = require('./routes/account.routes')
 
 
 app.get("/", (req, res) => {
@@ -12,6 +15,7 @@ app.get("/", (req, res) => {
 
 app.use("/health", healthRouter);
 app.use("/users", userRouter);
+app.use("/accounts", accRoutes);
 
 
 module.exports = app;

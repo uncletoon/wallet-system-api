@@ -11,6 +11,9 @@
 # Temporary files
 *.tmp
 *~
+.what
+account.controller.js
+accounts.js
 
 *.bak
 # Environment files (containing secrets, API keys, credentials)

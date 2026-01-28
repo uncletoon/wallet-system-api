@@ -1,9 +1,14 @@
 const express = require('express');
 const userRouter = express.Router();
 
-userRouter.get('/', (req, res) => {
-    res.send("List of users")
-})
+
+const {
+    createUser,
+    listUsers
+} = require("../controllers/user.controller")
+
+userRouter.post("/", createUser)
+userRouter.get("/", listUsers)
 
 
 
