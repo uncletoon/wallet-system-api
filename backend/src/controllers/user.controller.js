@@ -1,4 +1,4 @@
-const user = require('../data/users')
+const users = require('../data/users')
 const { uuid } = require('uuidv4')
 
 const createUser = (req, res) => {
@@ -22,8 +22,8 @@ const createUser = (req, res) => {
         });
     }
 
-    for (const id in user) {
-        if(user[id].email === email) {
+    for (const id in users) {
+        if (users[id].email === email) {
             return res.status(409).json({
                 message: "Email already exists."
             });
@@ -31,27 +31,44 @@ const createUser = (req, res) => {
     }
 
     const id = uuid();
-    user[id] = {
+    users[id] = {
         id,
         name,
         email,
         created_at: new Date().toLocaleTimeString(),
     };
-    console.log("New user is created", user)
+    console.log("New user is created", users)
 
     res.status(201).json({
         message: "User created successfully!!",
-        user: user[id]
+        user: users[id]
     });
 };
 
 const listUsers = (req, res) => {
-    res.json(user);
+    return res.json(users);
 };
+
+
+const getUserById = (req, res) => {
+    const { id } = req.params;
+
+    const singleUser = users[id]
+    if (!singleUser) {
+        return res.status(400).json({
+            message: "User not found"
+        });
+    }
+
+    res.status(200).json(singleUser);
+};
+
+
 
 module.exports = {
     createUser,
-    listUsers
+    listUsers,
+    getUserById
 };
 
 
