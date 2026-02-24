@@ -62,25 +62,13 @@ const depositAmount = (req, res) => {
     updated_at: new Date().toLocaleString(),
   };
 
-  const wallet = wallets[walletIndex];
-  const transaction = {
-    id: generateTransactionId(),
-    walletId: wallet.id,
-    type: "deposit",
-    amount: amount,
-    balanceAfter: balance,
-    createdAt: new Date().toLocaleString(),
-  };
   fs.writeFileSync(walletsPath, JSON.stringify(wallets, null, 2));
 
   console.log(`Deposit sucessfully!!, The New balance is ${wallets[walletIndex].balance}`);
 
-  transactions.push(transaction);
-
   res.status(200).json({
     message: "DEPOSIT SUCESSFUL!!",
     wallet: wallets[walletIndex],
-    transaction: transaction
   });
 };
 
