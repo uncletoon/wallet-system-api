@@ -1,54 +1,22 @@
-const users = require("../data/users");
+const users = require("../data/user.json");
 const { uuid } = require("uuidv4");
+const wallets = require("../data/wallet.json");
+const fs = require("fs");
+const path = require("path");
 
 //Create a user
 
 const createUser = (req, res) => {
   const { userId, name, email } = req.body;
 
-  if (!userId) {
-    res.status(400).json({
-      message: "Please, User ID is missing.",
-    });
-    return;
-  }
-  if (!name) {
-    res.status(400).json({
-      message: "Please, name is missing.",
-    });
-    return;
-  }
-  if (!email) {
-    res.status(400).json({
-      message: "Please, email is required",
-    });
-    return;
-  }
+  console.log({users});
+  
+  const usersPath = path.join(__dirname, "../data/user.json");
+  const walletsPath = path.join(__dirname, "../data/wallet.json");
 
-  if (typeof name !== "string" || typeof email !== "string") {
-    return res.status(400).json({
-      message: "Invalid data type",
-    });
-  }
-
-  if (!email.includes("@")) {
-    return res.status(400).json({
-      message: "Invalid email format",
-    });
-  }
-
-  const emailExist = users.find((u) => u.email === email);
-  if (emailExist) {
-    return res.status(409).json({
-      message: "Email already exist!",
-    });
-  }
-  const userIdExist = users.find((u) => u.userId === userId);
-  if (userIdExist) {
-    return res.status(409).json({
-      message: "User whi this ID already exist!",
-    });
-  }
+  // Read existing users
+  // const usersData = JSON.parse(fs.readFileSync(usersPath, "utf-8"));
+  // const walletsData = JSON.parse(fs.readFileSync(walletsPath, "utf-8"));
 
   const newUsers = {
     id: uuid(),
@@ -60,21 +28,41 @@ const createUser = (req, res) => {
   users.push(newUsers);
   console.log("New user is created", newUsers);
 
+  const wallet = {
+    id: uuid(),
+    userId: newUsers.userId,
+    balance: 0,
+    created_at: new Date().toLocaleString(),
+  };
+
+  wallets.push(wallet);
+  console.log("wallet created:", wallet);
+
+  // Save back to file
+  fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+  fs.writeFileSync(walletsPath, JSON.stringify(wallets, null, 2));
+
   res.status(201).json({
-    message: "User created successfully!!",
+    message: "User and wallet created successfully!!",
     user: newUsers,
+    wallet: wallet,
   });
 };
-
 // List all users
 
 const listUsers = (req, res) => {
+  const usersPath = path.join(__dirname, "../data/user.json");
+  const users = JSON.parse(fs.readFileSync(usersPath, "utf-8"));
+
   return res.json(users);
 };
 
 // Update a user
 const updateUser = (req, res) => {
   const { id } = req.params;
+
+  const usersPath = path.join(__dirname, "../data/user.json");
+  const users = JSON.parse(fs.readFileSync(usersPath, "utf-8"))
 
   const userIndex = users.findIndex((u) => u.id == id);
   if (userIndex === -1) {
@@ -109,6 +97,7 @@ const updateUser = (req, res) => {
     ...updates,
     updated_at: new Date().toLocaleTimeString(),
   };
+  fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
 
   res.status(200).json({
     message: "User updated successfully!!",
@@ -120,9 +109,9 @@ const updateUser = (req, res) => {
 // Get user by ID
 
 const getUserById = (req, res) => {
-  const { id } = req.params;
-
-  const singleUser = users.find((u) => u.id == id);
+  const { userId } = req.params;
+  
+  const singleUser = users.find((u) => u.userId == userId);
   if (!singleUser) {
     return res.status(400).json({
       message: "User not found",

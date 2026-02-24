@@ -1,5 +1,5 @@
-const wallets = require("../data/wallets");
-const users = require("../data/users");
+const wallets = require("../data/wallet.json");
+const users = require("../data/user.json");
 
 const validator = require("validator");
 

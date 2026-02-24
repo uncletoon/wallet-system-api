@@ -1,6 +1,7 @@
 const express = require('express');
 const userRouter = express.Router();
 
+const userValidator = require('../validations/user.validator');
 
 const {
     createUser,
@@ -9,9 +10,9 @@ const {
     updateUser
 } = require("../controllers/user.controller")
 
-userRouter.post("/", createUser)
+userRouter.post("/", userValidator, createUser)
 userRouter.get("/", listUsers)
-userRouter.get('/:id', getUserById)
+userRouter.get('/:userId', getUserById)
 userRouter.patch('/:id', updateUser)
 
 

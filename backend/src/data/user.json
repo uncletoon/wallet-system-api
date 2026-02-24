@@ -1,0 +1,24 @@
+[
+  {
+    "id": "ec8b715e-705e-4170-b66c-629070dc3cec",
+    "userId": 1,
+    "name": "Patience INGABIRE",
+    "email": "ingabire@gmail.com",
+    "created_at": "17:07:36",
+    "updated_at": "10:00:06"
+  },
+  {
+    "id": "5c87d1dc-d5d9-4edb-930a-6880f01362db",
+    "userId": 2,
+    "name": "Patience",
+    "email": "patliko4@gmail.com",
+    "created_at": "17:09:01"
+  },
+  {
+    "id": "895988aa-c76e-419c-bb13-c5bc656088ff",
+    "userId": 3,
+    "name": "Patience",
+    "email": "patliko4@gmail.com",
+    "created_at": "17:09:33"
+  }
+]
