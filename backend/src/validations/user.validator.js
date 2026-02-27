@@ -73,4 +73,6 @@ const userValidator = (req, res, next) => {
 };
 
 
-module.exports = userValidator;
+module.exports = {
+  userValidator
+};

@@ -1,28 +1,16 @@
-const express = require('express');
-const walletRoutes = express.Router();
-
-
-
+const express = require("express");
+const router = express.Router();
 
 const {
-    // walletValidator,
-    depositValidator,
-    withdrawValidator
-} = require('../validations/wallet.validator');
-const {
-    // createWallet,
-    getWalletByUserId,
     depositAmount,
+    getTransactions,
     withdrawAmount,
-    getAllUserWithWallet
-} = require('../controllers/wallet.controller');
+    getWalletById
+} = require("../controllers/wallet.controller");
 
+router.post("/:id/deposit", depositAmount);
+router.get("/:id/transactions", getTransactions);
+router.post("/:id/withdraw", withdrawAmount);
+router.get("/:id", getWalletById);
 
-// walletRoutes.post('/', walletValidator, createWallet);
-walletRoutes.get('/all', getAllUserWithWallet);
-walletRoutes.get('/:userId', getWalletByUserId);
-walletRoutes.patch('/:id/deposit', depositValidator, depositAmount);
-walletRoutes.patch('/:id/withdraw', withdrawValidator, withdrawAmount);
-
-
-module.exports = walletRoutes;
+module.exports = router;
