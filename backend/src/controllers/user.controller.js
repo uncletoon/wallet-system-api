@@ -1,105 +1,74 @@
-const { createUserWithWallet } = require("../services/user.service");
+// src/services/user.service.js
+// src/controllers/user.controller.js
+
+const userService = require("../services/user.service");
 
 async function createUser(req, res) {
   try {
     const { name, email, userId } = req.body;
-
-    const result = await createUserWithWallet(name, email, userId);
+    const user = await userService.createUser({name, email, userId});
 
     res.status(201).json({
-      message: "User and wallet created successfully",
-      ...result,
+      message: "User created successfully",
+      user: user
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
-  } catch (err) {
-    res.status(400).json({
-      message: err.message,
-    });
+async function getUsers(req, res){
+  try {
+    const users = await userService.getUsers();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+async function updateUser(req, res) {
+  try {
+    const {id} = req.params;
+    const { name, email } = req.body;
+
+    const user = await userService.userUpdadate(id, {name, email});
+
+    res.status(200).json({
+      message: `User updated successful.`,
+      user: user
+    })
+  } catch (error) {
+    res.status(404).json({message: error.message });
+  }
+};
+
+async function deleteUser(req, res) {
+  try {
+    const {id} = req.params;
+    await userService.deleteUser(id);
+
+    res.status(200).json({
+      message: `User with id: ${id} has been deleted successful.`
+    })
+  } catch (error) {
+    res.status(404).json({message: error.message });
   }
 }
 
-module.exports = {
-  createUser,
+
+async function getUser(req, res) {
+  try {
+    const { id } = req.params;
+    const user = await userService.getUser(id);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-
-
-// // List all users
-
-// const listUsers = (req, res) => {
-//   const usersPath = path.join(__dirname, "../data/user.json");
-//   const users = JSON.parse(fs.readFileSync(usersPath, "utf-8"));
-
-//   return res.json(users);
-// };
-
-// // Update a user
-// const updateUser = (req, res) => {
-//   const { id } = req.params;
-
-//   const usersPath = path.join(__dirname, "../data/user.json");
-//   const users = JSON.parse(fs.readFileSync(usersPath, "utf-8"))
-
-//   const userIndex = users.findIndex((u) => u.id == id);
-//   if (userIndex === -1) {
-//     return res.status(404).json({
-//       message: "User not found",
-//     });
-//   }
-
-//   const ALLOWED_KEY = ["name", "email"];
-//   const updates = {};
-
-//   for (const key of ALLOWED_KEY) {
-//     if (req.body[key] !== undefined) {
-//       if (key === "name" && typeof req.body[key] !== "string") {
-//         return res.status(400).json({
-//           message: "Invalid name.",
-//         });
-//       }
-
-//       if (key === "email" && !req.body[key].includes("@")) {
-//         return res.status(400).json({
-//           message: "Invalid email.",
-//         });
-//       }
-
-//       updates[key] = req.body[key];
-//     }
-//   }
-
-//   users[userIndex] = {
-//     ...users[userIndex],
-//     ...updates,
-//     updated_at: new Date().toLocaleTimeString(),
-//   };
-//   fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
-
-//   res.status(200).json({
-//     message: "User updated successfully!!",
-//     user: users[userIndex],
-//   });
-//   console.log("User updated Successfully:", users[userIndex]);
-// };
-
-// // Get user by ID
-
-// const getUserById = (req, res) => {
-//   const { userId } = req.params;
-  
-//   const singleUser = users.find((u) => u.userId == userId);
-//   if (!singleUser) {
-//     return res.status(400).json({
-//       message: "User not found",
-//     });
-//   }
-
-//   res.status(200).json(singleUser);
-// };
-
 module.exports = {
   createUser,
-//   listUsers,
-//   getUserById,
-//   updateUser,
- };
+  getUsers,
+  getUser,
+  deleteUser,
+  updateUser
+}
