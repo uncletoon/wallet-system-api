@@ -1,38 +1,29 @@
-const pool = require("../config/database");
 
-async function createUserWithWallet(name, email, userId) {
-  const client = await pool.connect();
+const userRepository = require("../repositories/user.repo");
 
-  try {
-    await client.query("BEGIN");
-    // insert user
-    const userResult = await client.query(
-      "INSERT INTO users(name, email, userId) VALUES($1,$2,$3) RETURNING *",
-      [name, email,userId],
-    );
-    const user = userResult.rows[0];
-
-    // create wallet linked to user
-    const walletResult = await client.query(
-      "INSERT INTO wallets(userId) VALUES($1) RETURNING *",
-      [user.id],
-    );
-
-    const wallet = walletResult.rows[0];
-
-    await client.query("COMMIT");
-
-    return { user, wallet };
-
-  } catch (err) {
-    await client.query("ROLLBACK");
-    throw err;
-  } finally {
-    client.release();
+class UserService {
+  async createUser(name, email, userId) {
+    // support both: createUser({name, email, userId}) and createUser(name, email, userId)
+    // if (name && typeof name === 'object' && !Array.isArray(name)) {
+    //   const payload = name;
+    //   return await userRepository.createUser(payload.name, payload.email, payload.userId);
+    // }
+    return await userRepository.createUser(name, email, userId);
+  }
+  
+  async getUsers() {
+    return await userRepository.getAllUsers();
   }
 
+  async getUser(id) {
+    return await userRepository.getUserById(id);
+  }
+  async deleteUser(id) {
+    return await userRepository.deleteUser(id);
+  }
+  async userUpdadate(id, name, email) {
+    return await userRepository.updateUser(id, name, email, );
+  }
 }
 
-module.exports = {
-  createUserWithWallet,
-};
+module.exports = new UserService();
