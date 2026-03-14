@@ -62,7 +62,7 @@ const userValidator = (req, res, next) => {
   const userIdExist = users.find((u) => u.userId === userId);
   if (userIdExist) {
     return res.status(409).json({
-      message: "User whi this ID already exist!",
+      message: "User whith this UserId already exist!",
     });
   }
   //Save cleaned data

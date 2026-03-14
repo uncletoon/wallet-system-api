@@ -6,7 +6,7 @@ const {userValidator} = require('../validations/user.validator');
 
 
 userRouter.route('/')
-.post(userValidator, userController.createUser)
+.post( userController.createUser)
 .get(userController.getUsers)
 
 

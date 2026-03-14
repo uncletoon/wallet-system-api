@@ -8,11 +8,23 @@ class UserRepository {
 
   async createUser(name, email, userId) {
     // validate required fields before calling DB
-    if (!name || !email || !userId) {
+    if (!name) {
       throw new Error(
-        "Missing required fields: name, email and userId are required",
+        "Missing required field: name, email and userId are required",
       );
     }
+    if (!userId) {
+      throw new Error("Missing required field: userId is required");
+    }
+    if (!email) {
+      throw new Error("Missing required field: email is required");
+    }
+    // Check if user with this userId exists
+    const [existingUser] = await this.users.where("userId", userId).findOne();
+    if (existingUser) {
+      throw new Error("User with this userId already exists.");
+    }
+
     return await this.users.create({ name, userId, email });
   }
 
@@ -39,28 +51,27 @@ class UserRepository {
   async updateUser(id, updates, email) {
     const existing = await this.users.findById(id);
     if (!existing || (Array.isArray(existing) && existing.length === 0)) {
-      throw new Error('User Not exist');
+      throw new Error("User Not exist");
     }
 
     const data = {};
     // support object payload: updateUser(id, { name, email, userId })
-    if (updates && typeof updates === 'object' && !Array.isArray(updates)) {
-      const allowed = ['name', 'email', 'userId'];
+    if (updates && typeof updates === "object" && !Array.isArray(updates)) {
+      const allowed = ["name", "email", "userId"];
 
       for (const key of allowed) {
         if (updates[key] !== undefined && updates[key] !== null) {
           data[key] = updates[key];
         }
       }
-    } 
-    else {
+    } else {
       // legacy signature: updateUser(id, name, email)
       if (updates !== undefined && updates !== null) data.name = updates;
       if (email !== undefined && email !== null) data.email = email;
     }
 
     if (Object.keys(data).length === 0) {
-      throw new Error('No fields to update');
+      throw new Error("No fields to update");
     }
 
     return this.users.update(id, data);

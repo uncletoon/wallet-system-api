@@ -99,10 +99,12 @@ class QueryHelper {
   }
 
   async findFirst(n = 1) {
+    this.state.reset();
     return this.orderBy("id", "ASC").limit(n).get();
   }
 
   async findLast(n = 1) {
+    this.state.reset();
     return this.orderBy("id", "DESC").limit(n).get();
   }
 }

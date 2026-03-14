@@ -1,12 +1,10 @@
-// src/services/user.service.js
-// src/controllers/user.controller.js
 
 const userService = require("../services/user.service");
 
 async function createUser(req, res) {
   try {
     const { name, email, userId } = req.body;
-    const user = await userService.createUser({name, email, userId});
+    const user = await userService.createUser(name, email, userId);
 
     res.status(201).json({
       message: "User created successfully",
